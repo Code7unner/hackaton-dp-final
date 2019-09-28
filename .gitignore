@@ -36,7 +36,7 @@ bower_components
 .lock-wscript
 
 # Compiled binary addons (https://nodejs.org/api/addons.html)
-build/Release
+client/build/Release
 
 # Dependency directories
 node_modules/
@@ -69,3 +69,5 @@ package-lock.json
 
 # next.js build output
 .next
+
+kazan-hack-client
