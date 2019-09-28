@@ -36,8 +36,9 @@ function create(req, res) {
 // login user by phone number and password
 function login(req, res) {
     const password = req.body.password;
+    const phone = req.body.phone;
 
-    User.findOne({ phone: req.body.phone })
+    User.findOne({ phone })
         .then(user => {
             if (!user) {
                 return res.status(404).json('User not found');
@@ -55,7 +56,8 @@ function login(req, res) {
                                 (err, token) => {
                                     res.json({
                                         success: true,
-                                        token: 'Bearer ' + token
+                                        token: 'Bearer ' + token,
+                                        user
                                     })
                                 }
                             );
