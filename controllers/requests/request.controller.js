@@ -1,21 +1,39 @@
 const db = require('../../_helpers/db');
 const Requests = db.Requests;
+const axios = require('../../_helpers/axios');
 
 // creating user schema
 function create(req, res) {
-    new Requests({
-        user: req.user.id,
-        address: req.body.address,
-        status: req.body.status,
-        request: req.body.request,
-        feedback: {
-            rating: req.body.rating,
-            text: req.body.text
-        }
+    const text = req.body.text;
+
+    axios.get(`http://prosto.ai/api/classify/5d8e0b621f0000023d163e56`, {
+        params: { text }
     })
-        .save()
-        .then(request => res.json(request))
-        .catch(err => res.status(404).json(err))
+        .then(responce => {
+            const category = responce.data.categories
+                .map(item => item.category)[0]
+                .split(/[ ]+(?=\d)/);
+
+            const request = {
+                category: category[0].split(/[ ]+[^А-Яа-я]/)[1],
+                kind: category[1]
+            };
+
+            new Requests({
+                user: req.user.id,
+                address: req.body.address,
+                status: req.body.status,
+                request: request,
+                feedback: {
+                    rating: req.body.rating,
+                    review: req.body.review
+                }
+            })
+                .save()
+                .then(() => res.json("Completed"))
+                .catch(err => res.status(404).json(err))
+        })
+        .catch(err => res.json(err))
 }
 
 function getAllRequests(req, res) {
