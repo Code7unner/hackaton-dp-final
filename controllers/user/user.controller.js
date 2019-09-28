@@ -15,7 +15,8 @@ function create(req, res) {
                     phone: req.body.phone,
                     password: req.body.password,
                     name: req.body.name,
-                    address: req.body.address
+                    address: req.body.address,
+                    role: req.body.role
                 });
 
                 bcrypt.genSalt(10, (err, salt) => {

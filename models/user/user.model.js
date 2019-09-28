@@ -11,7 +11,7 @@ const schema = new Schema({
     role: {
         type: String,
         required: true,
-        enum: ['Client', 'Operator', 'worker'],
+        enum: ['Client', 'Operator', 'Worker'],
         default: 'Client'
     },
     phone: { type: String, required: true },
