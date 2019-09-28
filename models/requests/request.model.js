@@ -3,11 +3,11 @@ const Schema = mongoose.Schema;
 
 const schema = new Schema({
     user: { type: Schema.Types.ObjectId, ref: 'User' },
-    address: { type: String, required: true },
+    worker: { type: Schema.Types.ObjectId, ref: 'User', default: '5d8f5b01e55c24690cefdf5f' },
     status: {
         type: String,
         required: true,
-        enum: ['Рассматривается', 'Ожидается', 'Выполняется', 'Выполненор'],
+        enum: ['Рассматривается', 'Ожидается', 'Выполняется', 'Выполнено'],
         default: 'Рассматривается'
     },
     request: {

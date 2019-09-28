@@ -22,16 +22,10 @@ function create(req, res) {
 
             new Requests({
                 user: req.user.id,
-                address: req.body.address,
-                status: req.body.status,
-                request: request,
-                feedback: {
-                    rating: req.body.rating,
-                    review: req.body.review
-                }
+                request: request
             })
                 .save()
-                .then(() => res.json("Completed"))
+                .then((result) => res.json(result))
                 .catch(err => res.status(404).json(err))
         })
         .catch(err => res.json(err))
@@ -42,15 +36,16 @@ function getAllRequests(req, res) {
         .then(async requests => {
             if (requests) {
                 for (let request of requests) {
-                    request.user = await User.findById(request.user)
+                    request.user = await User.findById(request.user);
+                    request.worker = await User.findById(request.worker);
                 }
 
                 return res.json(requests)
             } else {
-                return res.status(404).json('User is not existing')
+                return res.status(400).json('User is not existing')
             }
         })
-        .catch(err => res.status(500).json(err))
+        .catch(err => res.status(404).json(err))
 }
 
 function cancelRequest(req, res) {
