@@ -69,7 +69,23 @@ function login(req, res) {
         })
 }
 
+function updateUser(req, res) {
+    const name = req.body.name;
+    const address = req.body.address;
+
+    User.findOneAndUpdate({ '_id': req.params.id }, { name, address })
+        .then(user => {
+            if (!user) {
+                return res.status(404).json('User not found')
+            } else {
+                return res.status(200).json('Update completed')
+            }
+        })
+        .catch(err => res.status(500).json(err))
+}
+
 module.exports = {
     create,
-    login
+    login,
+    updateUser
 };
