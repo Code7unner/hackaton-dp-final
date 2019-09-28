@@ -21,7 +21,7 @@ function create(req, res) {
 
                 const request = {
                     category: newCategory[0].split(/[ ]+[^А-Яа-я]/)[1],
-                    kind: category[1]
+                    kind: newCategory[1]
                 };
 
                 const userInfo = await User.findOne({ '_id': req.user.id });
