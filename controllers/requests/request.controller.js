@@ -10,23 +10,31 @@ function create(req, res) {
     axios.get(`http://prosto.ai/api/classify/5d8e0b621f0000023d163e56`, {
         params: { text }
     })
-        .then(responce => {
+        .then(async responce => {
             const category = responce.data.categories
-                .map(item => item.category)[0]
-                .split(/[ ]+(?=\d)/);
+                .map(item => item.category)[0];
 
-            const request = {
-                category: category[0].split(/[ ]+[^А-Яа-я]/)[1],
-                kind: category[1]
-            };
+            if (category === 'nrecognized') {
+                return res.status(400).json('Request is not recognized')
+            } else {
+                category.split(/[ ]+(?=\d)/);
 
-            new Requests({
-                user: req.user.id,
-                request: request
-            })
-                .save()
-                .then((result) => res.json(result))
-                .catch(err => res.status(404).json(err))
+                const request = {
+                    category: category[0].split(/[ ]+[^А-Яа-я]/)[1],
+                    kind: category[1]
+                };
+
+                const userInfo = await User.findOne({ '_id': req.user.id });
+
+                new Requests({
+                    user: req.user.id,
+                    request: request,
+                    address: userInfo.address
+                })
+                    .save()
+                    .then((result) => res.json(result))
+                    .catch(err => res.status(404).json(err))
+            }
         })
         .catch(err => res.json(err))
 }

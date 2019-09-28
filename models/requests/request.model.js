@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 const schema = new Schema({
     user: { type: Schema.Types.ObjectId, ref: 'User' },
     worker: { type: Schema.Types.ObjectId, ref: 'User', default: '5d8f5b01e55c24690cefdf5f' },
+    address: { type: String, required: true },
     status: {
         type: String,
         required: true,
