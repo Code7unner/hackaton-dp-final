@@ -17,10 +17,10 @@ function create(req, res) {
             if (category === 'nrecognized') {
                 return res.status(400).json('Request is not recognized')
             } else {
-                category.split(/[ ]+(?=\d)/);
+                const newCategory = category.split(/[ ]+(?=\d)/);
 
                 const request = {
-                    category: category[0].split(/[ ]+[^А-Яа-я]/)[1],
+                    category: newCategory[0].split(/[ ]+[^А-Яа-я]/)[1],
                     kind: category[1]
                 };
 
