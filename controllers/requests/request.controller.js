@@ -1,5 +1,6 @@
 const db = require('../../_helpers/db');
 const Requests = db.Requests;
+const User = db.User;
 const axios = require('../../_helpers/axios');
 
 // creating user schema
@@ -38,9 +39,13 @@ function create(req, res) {
 
 function getAllRequests(req, res) {
     Requests.find({ user: req.user.id })
-        .then(user => {
-            if (user) {
-                return res.json(user)
+        .then(async requests => {
+            if (requests) {
+                for (let request of requests) {
+                    request.user = await User.findById(request.user)
+                }
+
+                return res.json(requests)
             } else {
                 return res.status(404).json('User is not existing')
             }
