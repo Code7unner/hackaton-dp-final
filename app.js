@@ -16,7 +16,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(morgan("dev"));
 app.use(cookieparser());
-app.use(cors({ origin: process.env.CLIENT_URL }));
+app.use(cors());
 
 //Passport middleware
 app.use(passport.initialize());
