@@ -32,7 +32,12 @@ function create(req, res) {
                     address: userInfo.address
                 })
                     .save()
-                    .then((result) => res.json(result))
+                    .then(async result => {
+                        result.user = await User.findById(result.user);
+                        result.worker = await User.findById(result.worker);
+
+                        return res.json(result)
+                    })
                     .catch(err => res.status(404).json(err))
             }
         })
