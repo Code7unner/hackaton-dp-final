@@ -14,7 +14,8 @@ function create(req, res) {
                 const newUser = new User({
                     phone: req.body.phone,
                     password: req.body.password,
-                    name: req.body.name
+                    name: req.body.name,
+                    address: req.body.address
                 });
 
                 bcrypt.genSalt(10, (err, salt) => {

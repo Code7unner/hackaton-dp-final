@@ -19,7 +19,7 @@ function create(req, res) {
 }
 
 function getAllRequests(req, res) {
-    Requests.findOne({ user: req.user.id })
+    Requests.find({ user: req.user.id })
         .then(user => {
             if (user) {
                 return res.json(user)
@@ -31,7 +31,7 @@ function getAllRequests(req, res) {
 }
 
 function cancelRequest(req, res) {
-    Requests.deleteOne({ '_id': req.body.id })
+    Requests.deleteOne({ '_id': req.params.id })
         .then( user => {
             return res.json(user)
         })
