@@ -49,6 +49,8 @@ function create(req, res) {
 async function createByPhone(req, res) {
     const info = req.body;
     const text = req.body.text;
+    const phone = req.body.phone;
+    const address = req.body.address;
 
     console.log("req.body:", info);
 
