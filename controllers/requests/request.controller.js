@@ -57,7 +57,7 @@ async function createByPhone(req, res) {
     let user = await User.findOne({ phone });
 
     if (!user) {
-        const password = generator.generate({length: 10, numbers: true});
+        // const password = generator.generate({length: 10, numbers: true});
 
         // const nexmo = new Nexmo({
         //     apiKey: nexmoConf.apiKey,
