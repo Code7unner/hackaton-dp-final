@@ -124,21 +124,55 @@ async function createByPhone(req, res) {
         .catch(err => res.json(err))
 }
 
-function getAllRequests(req, res) {
-    Requests.find({ user: req.user.id })
-        .then(async requests => {
-            if (requests) {
-                for (let request of requests) {
-                    request.user = await User.findById(request.user);
-                    request.worker = await User.findById(request.worker);
-                }
+async function getAllRequests(req, res) {
+    const user = await User.findOne({ user: req.user.id });
 
-                return res.json(requests)
-            } else {
-                return res.status(400).json('User is not existing')
-            }
-        })
-        .catch(err => res.status(404).json(err))
+    if (user.role.toLowerCase() === 'client') {
+        Requests.find({ user: req.user.id })
+            .then(async requests => {
+                if (requests) {
+                    for (let request of requests) {
+                        request.user = await User.findById(request.user);
+                        request.worker = await User.findById(request.worker);
+                    }
+
+                    return res.json(requests)
+                } else {
+                    return res.status(400).json('User is not existing')
+                }
+            })
+            .catch(err => res.status(404).json(err))
+    } else if (user.role.toLowerCase() === 'worker') {
+        Requests.find({ worker: req.user.id })
+            .then(async requests => {
+                if (requests) {
+                    for (let request of requests) {
+                        request.user = await User.findById(request.user);
+                        request.worker = await User.findById(request.worker);
+                    }
+
+                    return res.json(requests)
+                } else {
+                    return res.status(400).json('Worker is not existing')
+                }
+            })
+            .catch(err => res.status(404).json(err))
+    } else {
+        Requests.find()
+            .then(async requests => {
+                if (requests) {
+                    for (let request of requests) {
+                        request.user = await User.findById(request.user);
+                        request.worker = await User.findById(request.worker);
+                    }
+
+                    return res.json(requests)
+                } else {
+                    return res.status(400).json('Requests are not existing')
+                }
+            })
+            .catch(err => res.status(404).json(err))
+    }
 }
 
 function cancelRequest(req, res) {
