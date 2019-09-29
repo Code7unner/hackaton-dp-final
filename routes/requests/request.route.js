@@ -12,5 +12,7 @@ router.post('/create', auth, requestController.create);
 router.get('/getRequest', auth, requestController.getAllRequests);
 // delete current request
 router.get('/deleteRequest/:id', requestController.cancelRequest);
+// update current status
+router.post('/update/status', requestController.updateStatusRequest);
 
 module.exports = router;

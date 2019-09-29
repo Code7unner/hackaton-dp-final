@@ -2,6 +2,8 @@ const jwt = require('jsonwebtoken');
 const db = require('../../_helpers/db');
 const keys = require('../../_helpers/dbConfig');
 const bcrypt = require('bcryptjs');
+const generator = require('generate-password');
+
 const User = db.User;
 
 // creating user schema
@@ -70,6 +72,7 @@ function login(req, res) {
         })
 }
 
+// TODO: ADD PASSWORD TO CHANGE
 function updateUser(req, res) {
     const name = req.body.name;
     const address = req.body.address;

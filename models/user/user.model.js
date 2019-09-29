@@ -6,7 +6,7 @@ const schema = new Schema({
         request: { type: Schema.Types.ObjectId, ref: 'Requests' }
     }],
     password: { type: String, required: true },
-    name: { type: String, required: true },
+    name: { type: String },
     address: { type: String, required: true },
     role: {
         type: String,
