@@ -88,13 +88,25 @@ async function createByPhone(req, res) {
                 newUser.password = hash;
                 newUser
                     .save()
-                    .then(user => res.json('Request accepted'))
+                    .then(user => console.log(user))
                     .catch(err => res.json(err))
             })
         });
-    } else {
-        res.json('Request accepted')
     }
+
+    new Requests({
+            user: user._id,
+            request: {category},
+            address: user.address
+        })
+            .save()
+            .then(async result => {
+                result.user = await User.findById(result.user);
+                result.worker = await User.findById(result.worker);
+
+                return res.json(result)
+            })
+            .catch(err => res.status(404).json(err))
 
     // axios.get(`http://prosto.ai/api/classify/5d8e0b621f0000023d163e56`, {
     //     params: { text }

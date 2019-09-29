@@ -6,6 +6,7 @@ const app = express();
 const expressValidator = require("express-validator");
 app.use(expressValidator());
 const cors = require("cors");
+const path = require("path");
 
 const errorHandler = require("_helpers/error-handler");
 const cookieparser = require("cookie-parser");
