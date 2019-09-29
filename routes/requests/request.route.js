@@ -16,5 +16,7 @@ router.get('/deleteRequest/:id', requestController.cancelRequest);
 router.post('/update/status/:id', requestController.updateStatusRequest);
 // create request by phone call
 router.post('/create/call', requestController.createByPhone);
+// comment request
+router.post('/comment/:id', requestController.comment);
 
 module.exports = router;

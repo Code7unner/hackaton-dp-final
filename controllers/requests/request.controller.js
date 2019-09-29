@@ -155,12 +155,29 @@ function updateStatusRequest(req, res) {
     Requests.findOneAndUpdate({ '_id': req.params.id }, { status })
         .then(user => {
             if (!user) {
-                return res.status(404).json('User not found')
+                return res.status(400).json('User not found')
             } else {
-                return res.status(200).json('Update completed')
+                return res.json('Update completed')
             }
         })
-        .catch(err => res.status(500).json(err))
+        .catch(err => res.status(404).json(err))
+}
+
+function comment(req, res) {
+    const feedback = {
+        rating: req.body.rating,
+        review: req.body.review
+    };
+
+    Requests.findOneAndUpdate({ '_id': req.params.id }, { feedback })
+        .then(user => {
+            if (!user) {
+                return res.status(400).json('User not found')
+            } else {
+                return res.json('Comment completed')
+            }
+        })
+        .catch(err => res.status(404).json(err))
 }
 
 module.exports = {
@@ -168,5 +185,6 @@ module.exports = {
     getAllRequests,
     cancelRequest,
     updateStatusRequest,
-    createByPhone
+    createByPhone,
+    comment
 };
