@@ -54,10 +54,8 @@ async function createByPhone(req, res) {
 
     const user = await User.findOne({ phone });
 
-    if (user) {
-        // Nothing
-    } else {
-        const password = generator.generate({ length: 10, numbers: true });
+    if (!user) {
+        const password = generator.generate({length: 10, numbers: true});
 
         const nexmo = new Nexmo({
             apiKey: nexmoConf.apiKey,
@@ -76,6 +74,8 @@ async function createByPhone(req, res) {
             password
         });
 
+        user = newUser;
+
         await bcrypt.genSalt(10, (err, salt) => {
             bcrypt.hash(newUser.password, salt, (err, hash) => {
                 if (err) throw err;
@@ -87,9 +87,41 @@ async function createByPhone(req, res) {
         });
     }
 
-    await axios.get(`http://prosto.ai/api/classify/5d8e0b621f0000023d163e56`, {
+    axios.get(`http://prosto.ai/api/classify/5d8e0b621f0000023d163e56`, {
         params: { text }
     })
+        .then(async responce => {
+            const category = responce.data.categories
+                .map(item => item.category)[0];
+
+            if (category === 'nrecognized') {
+                return res.status(400).json('Request is not recognized')
+            } else {
+                const newCategory = category.split(/[ ]+(?=\d)/);
+
+                const request = {
+                    category: newCategory[0].split(/[ ]+[^А-Яа-я]/)[1],
+                    kind: newCategory[1]
+                };
+
+                const userInfo = await User.findOne({ '_id': req.user.id });
+
+                new Requests({
+                    user: req.user.id,
+                    request: request,
+                    address: userInfo.address
+                })
+                    .save()
+                    .then(async result => {
+                        result.user = await User.findById(result.user);
+                        result.worker = await User.findById(result.worker);
+
+                        return res.json(result)
+                    })
+                    .catch(err => res.status(404).json(err))
+            }
+        })
+        .catch(err => res.json(err))
 }
 
 function getAllRequests(req, res) {

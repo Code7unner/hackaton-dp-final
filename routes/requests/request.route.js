@@ -13,6 +13,6 @@ router.get('/getRequest', auth, requestController.getAllRequests);
 // delete current request
 router.get('/deleteRequest/:id', requestController.cancelRequest);
 // update current status
-router.post('/update/status', requestController.updateStatusRequest);
+router.post('/update/status/:id', requestController.updateStatusRequest);
 
 module.exports = router;
