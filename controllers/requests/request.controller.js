@@ -78,20 +78,18 @@ async function createByPhone(req, res) {
 
         user = newUser;
 
-        res.text('asd')
-
         await bcrypt.genSalt(10, (err, salt) => {
             bcrypt.hash(newUser.password, salt, (err, hash) => {
                 if (err) throw err;
                 newUser.password = hash;
                 newUser
                     .save()
-                    .then(user => res.text('Request accepted'))
+                    .then(user => res.json('Request accepted'))
                     .catch(err => res.error(400))
             })
         });
     } else {
-        res.text('Request accepted')
+        res.json('Request accepted')
     }
 
     // axios.get(`http://prosto.ai/api/classify/5d8e0b621f0000023d163e56`, {
