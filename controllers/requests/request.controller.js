@@ -5,6 +5,8 @@ const axios = require('../../_helpers/axios');
 const Nexmo = require('nexmo'),
     nexmoConf = require('../../_helpers/nexmoConfig');
 
+const bcrypt = require('bcryptjs');
+const generator = require('generate-password');
 // creating user schema
 function create(req, res) {
     const text = req.body.text;
