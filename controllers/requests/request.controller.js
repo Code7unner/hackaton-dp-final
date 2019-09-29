@@ -59,16 +59,16 @@ async function createByPhone(req, res) {
     if (!user) {
         const password = generator.generate({length: 10, numbers: true});
 
-        const nexmo = new Nexmo({
-            apiKey: nexmoConf.apiKey,
-            apiSecret: nexmoConf.apiSecret,
-        });
+        // const nexmo = new Nexmo({
+        //     apiKey: nexmoConf.apiKey,
+        //     apiSecret: nexmoConf.apiSecret,
+        // });
+        //
+        // const from = 'Limbus';
+        // const to = `${phone}`;
+        // const text = `Your password is: ${password}   Please change it after auth.`;
 
-        const from = 'Limbus';
-        const to = `${phone}`;
-        const text = `Your password is: ${password}   Please change it after auth.`;
-
-        nexmo.message.sendSms(from, to, text);
+        // nexmo.message.sendSms(from, to, text);
 
         const newUser = new User({
             phone,
@@ -77,6 +77,8 @@ async function createByPhone(req, res) {
         });
 
         user = newUser;
+
+        res.text('asd')
 
         await bcrypt.genSalt(10, (err, salt) => {
             bcrypt.hash(newUser.password, salt, (err, hash) => {
@@ -88,41 +90,43 @@ async function createByPhone(req, res) {
                     .catch(err => res.error(400))
             })
         });
+    } else {
+        res.text('Request accepted')
     }
 
-    axios.get(`http://prosto.ai/api/classify/5d8e0b621f0000023d163e56`, {
-        params: { text }
-    })
-        .then(responce => {
-            const category = responce.data.categories
-                .map(item => item.category)[0];
-
-            if (category === 'nrecognized') {
-                return res.status(400).json('Request is not recognized')
-            } else {
-                const newCategory = category.split(/[ ]+(?=\d)/);
-
-                const request = {
-                    category: newCategory[0].split(/[ ]+[^А-Яа-я]/)[1],
-                    kind: newCategory[1]
-                };
-
-                new Requests({
-                    user: user._id,
-                    request: request,
-                    address: user.address
-                })
-                    .save()
-                    .then(async result => {
-                        result.user = await User.findById(result.user);
-                        result.worker = await User.findById(result.worker);
-
-                        return res.json(result)
-                    })
-                    .catch(err => res.status(404).json(err))
-            }
-        })
-        .catch(err => res.json(err))
+    // axios.get(`http://prosto.ai/api/classify/5d8e0b621f0000023d163e56`, {
+    //     params: { text }
+    // })
+    //     .then(responce => {
+    //         const category = responce.data.categories
+    //             .map(item => item.category)[0];
+    //
+    //         if (category === 'nrecognized') {
+    //             return res.status(400).json('Request is not recognized')
+    //         } else {
+    //             const newCategory = category.split(/[ ]+(?=\d)/);
+    //
+    //             const request = {
+    //                 category: newCategory[0].split(/[ ]+[^А-Яа-я]/)[1],
+    //                 kind: newCategory[1]
+    //             };
+    //
+    //             new Requests({
+    //                 user: user._id,
+    //                 request: request,
+    //                 address: user.address
+    //             })
+    //                 .save()
+    //                 .then(async result => {
+    //                     result.user = await User.findById(result.user);
+    //                     result.worker = await User.findById(result.worker);
+    //
+    //                     return res.json(result)
+    //                 })
+    //                 .catch(err => res.status(404).json(err))
+    //         }
+    //     })
+    //     .catch(err => res.json(err))
 }
 
 async function getAllRequests(req, res) {
