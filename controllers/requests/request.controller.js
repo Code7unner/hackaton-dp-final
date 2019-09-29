@@ -87,7 +87,7 @@ async function createByPhone(req, res) {
                 newUser
                     .save()
                     .then(user => res.json('Request accepted'))
-                    .catch(err => res.error(400))
+                    .catch(err => res.json(err))
             })
         });
     } else {
