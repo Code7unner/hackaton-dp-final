@@ -52,7 +52,7 @@ async function createByPhone(req, res) {
 
     console.log("req.body:", info);
 
-    const user = await User.findOne({ phone });
+    let user = await User.findOne({ phone });
 
     if (!user) {
         const password = generator.generate({length: 10, numbers: true});
@@ -90,7 +90,7 @@ async function createByPhone(req, res) {
     axios.get(`http://prosto.ai/api/classify/5d8e0b621f0000023d163e56`, {
         params: { text }
     })
-        .then(async responce => {
+        .then(responce => {
             const category = responce.data.categories
                 .map(item => item.category)[0];
 
@@ -104,12 +104,10 @@ async function createByPhone(req, res) {
                     kind: newCategory[1]
                 };
 
-                const userInfo = await User.findOne({ '_id': req.user.id });
-
                 new Requests({
-                    user: req.user.id,
+                    user: user._id,
                     request: request,
-                    address: userInfo.address
+                    address: user.address
                 })
                     .save()
                     .then(async result => {
@@ -167,5 +165,6 @@ module.exports = {
     create,
     getAllRequests,
     cancelRequest,
-    updateStatusRequest
+    updateStatusRequest,
+    createByPhone
 };
