@@ -84,7 +84,8 @@ async function createByPhone(req, res) {
                 newUser.password = hash;
                 newUser
                     .save()
-                    .then(user => console.log(eser))
+                    .then(user => res.text('Request accepted'))
+                    .catch(err => res.error(400))
             })
         });
     }
